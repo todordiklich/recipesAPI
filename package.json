@@ -5,11 +5,25 @@
   "type": "module",
   "main": "index.js",
   "scripts": {
-    "dev": "node server.js"
+    "dev": "node server.js",
+    "build": "prisma generate",
+    "db:migrate": "prisma migrate dev",
+    "db:seed": "node src/db/prisma/seed.js",
+    "db:push": "prisma db push",
+    "db:studio": "prisma studio"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "express": "^5.2.1"
+    "@prisma/adapter-pg": "^7.8.0",
+    "@prisma/client": "^7.8.0",
+    "bcryptjs": "^3.0.3",
+    "dotenv": "^17.4.2",
+    "express": "^5.2.1",
+    "pg": "^8.22.0"
+  },
+  "devDependencies": {
+    "@types/pg": "^8.20.0",
+    "prisma": "^7.8.0"
   }
 }

@@ -1,5 +1,6 @@
 import express from 'express';
 import apiRouter from './api/index.js';
+import notFound from './middlewares/notFound.js';
 
 const app = express();
 
@@ -20,5 +21,6 @@ app.get('/health', (req, res) => {
 });
 
 app.use('/api', apiRouter);
+app.use(notFound);
 
 export default app;
