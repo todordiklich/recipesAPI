@@ -1,5 +1,5 @@
 import express from 'express';
-import apiRouter from './api/index.js';
+import v1Router from './api/v1/index.js';
 import notFound from './middlewares/notFound.js';
 
 const app = express();
@@ -20,7 +20,7 @@ app.get('/health', (req, res) => {
   res.json({ status: 'ok', timestamp: new Date().toISOString() });
 });
 
-app.use('/api', apiRouter);
+app.use('/api', v1Router);
 app.use(notFound);
 
 export default app;
