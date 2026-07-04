@@ -20,4 +20,80 @@ model User {
   isActive      Boolean   @default(true)
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
+
+  // Relations
+  recipes      Recipe[]
+  favorites    FavoriteRecipe[]
+  comments     Comment[]
+  mealPlans    MealPlan[]
+}
+
+model Recipe {
+  id           Int        @id @default(autoincrement())
+  authorId     Int
+  title        String
+  description  String?
+  cookingTime  Int        // in minutes
+  difficulty   Difficulty
+  imageUrl     String?
+  createdAt    DateTime   @default(now())
+
+  // Relations
+  author       User       @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  ingredients  Ingredient[]
+  favorites    FavoriteRecipe[]
+  comments     Comment[]
+  mealPlans    MealPlan[]
+}
+
+enum Difficulty {
+  EASY
+  MEDIUM
+  HARD
+}
+
+model Ingredient {
+  id           Int        @id @default(autoincrement())
+  recipeId     Int
+  name         String
+  quantity     String
+  createdAt    DateTime   @default(now())
+
+  // Relations
+  recipe       Recipe     @relation(fields: [recipeId], references: [id], onDelete: Cascade)
+}
+
+model FavoriteRecipe {
+  userId       Int
+  recipeId     Int
+
+  // Relations
+  user         User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  recipe       Recipe     @relation(fields: [recipeId], references: [id], onDelete: Cascade)
+
+  @@id([userId, recipeId])
+}
+
+model Comment {
+  id           Int        @id @default(autoincrement())
+  recipeId     Int
+  authorId     Int
+  content      String
+  createdAt    DateTime   @default(now())
+
+  // Relations
+  author       User       @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  recipe       Recipe     @relation(fields: [recipeId], references: [id], onDelete: Cascade)
+}
+
+model MealPlan {
+  id           Int        @id @default(autoincrement())
+  userId       Int
+  date         DateTime
+  recipeId     Int
+  createdAt    DateTime   @default(now())
+
+  // Relations
+  user         User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  recipe       Recipe     @relation(fields: [recipeId], references: [id], onDelete: Cascade)
 }

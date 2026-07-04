@@ -46,3 +46,28 @@ export { Prisma }
  * 
  */
 export type User = Prisma.UserModel
+/**
+ * Model Recipe
+ * 
+ */
+export type Recipe = Prisma.RecipeModel
+/**
+ * Model Ingredient
+ * 
+ */
+export type Ingredient = Prisma.IngredientModel
+/**
+ * Model FavoriteRecipe
+ * 
+ */
+export type FavoriteRecipe = Prisma.FavoriteRecipeModel
+/**
+ * Model Comment
+ * 
+ */
+export type Comment = Prisma.CommentModel
+/**
+ * Model MealPlan
+ * 
+ */
+export type MealPlan = Prisma.MealPlanModel
