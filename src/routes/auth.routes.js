@@ -2,6 +2,7 @@ import express from 'express';
 import * as userModel from '../models/user.model.js';
 import * as authController from '../controllers/auth.controller.js';
 import { authenticate } from '../middlewares/auth.js';
+import { authRateLimit } from '../middlewares/rateLimit.js';
 
 const router = express.Router();
 
@@ -18,7 +19,7 @@ setInterval(cleanupExpiredTokens, CLEANUP_INTERVAL).unref();
 
 router.post('/signup', authController.signup);
 
-router.post('/login', authController.login);
+router.post('/login', authRateLimit, authController.login);
 
 router.post('/refresh', authController.refresh);
 
