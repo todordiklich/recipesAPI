@@ -1,5 +1,5 @@
 import express from 'express';
-import v1Router from './api/v1/index.js';
+import v1Router from './api/index.js';
 import notFound from './middlewares/notFound.js';
 
 const app = express();
@@ -12,12 +12,14 @@ app.get('/', (req, res) => {
     version: '1.0.0',
     endpoints: {
       health: '/health',
+      auth: '/auth',
+      users: '/users',
     },
   });
 });
 
 app.get('/health', (req, res) => {
-  res.json({ status: 'ok', timestamp: new Date().toISOString() });
+  res.json({ status: 200, timestamp: new Date().toISOString() });
 });
 
 app.use('/api', v1Router);
