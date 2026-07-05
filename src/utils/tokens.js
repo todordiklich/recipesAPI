@@ -1,5 +1,6 @@
 import jwt from 'jsonwebtoken';
 import { randomBytes } from 'crypto';
+import AppError from './AppError.js';
 
 const REFRESH_TOKEN_BYTES = 32;
 const JWT_ACCESS_EXPIRES_IN = 1000 * 60 * 60 * 24; // 24h
@@ -32,17 +33,17 @@ export const verifyAccessToken = (token) => {
     const decoded = jwt.verify(token, process.env.JWT_ACCESS_SECRET);
 
     if (decoded.type !== 'access') {
-      throw new Error('Invalid token type');
+      throw new AppError('Invalid token type', 400);
     }
 
     return decoded;
   } catch (error) {
     if (error.name === 'TokenExpiredError') {
-      throw new Error('Access token expired');
+      throw new AppError('Access token expired', 400);
     } else if (error.name === 'JsonWebTokenError') {
-      throw new Error('Invalid access token');
+      throw new AppError('Invalid access token', 400);
     } else {
-      throw error;
+      throw new AppError('Access token error', 400);
     }
   }
 };

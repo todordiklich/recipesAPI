@@ -1,10 +1,11 @@
 import bcrypt from 'bcryptjs';
+import AppError from './AppError.js';
 
 const SALT_ROUNDS = 12;
 
 export const hashPassword = async (password) => {
   if (!password || typeof password !== 'string') {
-    throw new Error('Password must be a non-empty string');
+    throw new AppError('Password must be a non-empty string', 400);
   }
 
   return bcrypt.hash(password, SALT_ROUNDS);

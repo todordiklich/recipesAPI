@@ -5,25 +5,22 @@ import {
   getRefreshTokenExpiry,
 } from '../utils/tokens.js';
 import { comparePassword } from '../utils/password.js';
+import AppError from '../utils/AppError.js';
 
 export const getAllUsers = async () => {
-  try {
-    const users = await prisma.user.findMany({
-      select: {
-        id: true,
-        email: true,
-        name: true,
-      },
-    });
+  const users = await prisma.user.findMany({
+    select: {
+      id: true,
+      email: true,
+      name: true,
+    },
+  });
 
-    if (!users) {
-      throw new Error('Users not found');
-    }
-
-    return users;
-  } catch (error) {
-    throw new Error('Failed to get users');
+  if (!users) {
+    throw new AppError('Users not found', 404);
   }
+
+  return users;
 };
 
 export const findUser = async (id) => {
@@ -39,11 +36,11 @@ export const findUser = async (id) => {
     },
   });
   if (!user) {
-    throw new Error({ statud: 401, message: 'User not found' });
+    throw new AppError('User not found', 404);
   }
 
   if (!user.isActive) {
-    throw new Error({ statud: 401, message: 'User account is inactive' });
+    throw new AppError('User account is inactive', 403);
   }
 
   return user;
@@ -141,16 +138,16 @@ export const refreshToken = async (refreshToken) => {
     });
 
     if (!storedToken) {
-      throw new Error({ status: 500, message: 'Invalid refresh token' });
+      throw new AppError('Invalid refresh token', 400);
     }
 
     if (storedToken.expiresAt < new Date()) {
       await tx.refreshToken.delete({ where: { id: storedToken.id } });
-      throw new Error({ status: 500, message: 'Refresh token expired' });
+      throw new AppError('Refresh token expired', 400);
 
       if (!storedToken.user.isActive) {
         await tx.refreshToken.delete({ where: { id: storedToken.id } });
-        throw new Error({ status: 500, message: 'Account is inactive' });
+        throw new AppError('Account is inactive', 400);
       }
     }
     const accessToken = generateAccessToken({

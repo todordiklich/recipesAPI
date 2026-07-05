@@ -6,11 +6,7 @@ import { authenticate } from '../middlewares/auth.js';
 const router = express.Router();
 
 async function cleanupExpiredTokens() {
-  try {
-    await userModel.deleteExpiredRefreshTokens();
-  } catch (error) {
-    throw new Error(error);
-  }
+  await userModel.deleteExpiredRefreshTokens();
 }
 
 // Initial cleanup on server start

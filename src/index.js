@@ -1,6 +1,7 @@
 import express from 'express';
 import v1Router from './api/index.js';
 import notFound from './middlewares/notFound.js';
+import errorHandler from './middlewares/errorHandler.js';
 
 const app = express();
 
@@ -24,5 +25,6 @@ app.get('/health', (req, res) => {
 
 app.use('/api', v1Router);
 app.use(notFound);
+app.use(errorHandler);
 
 export default app;
