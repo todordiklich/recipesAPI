@@ -19,6 +19,8 @@ app.get('/', (req, res) => {
       health: '/health',
       auth: '/auth',
       users: '/users',
+      recipes: '/recipes',
+      mealPlans: '/mealPlans',
     },
   });
 });
