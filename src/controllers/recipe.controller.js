@@ -11,7 +11,8 @@ export const getRecipe = async (req, res, next) => {
 
 export const getRecipes = async (req, res, next) => {
   try {
-    const data = await recipeService.getRecipes(req.query);
+    const userId = req.user?.id;
+    const data = await recipeService.getRecipes(req.query, userId);
     res.status(200).json(data);
   } catch (error) {
     next(error);
@@ -64,6 +65,17 @@ export const getFavourites = async (req, res, next) => {
   try {
     const userId = req.user?.id;
     const data = await recipeService.getFavourites(userId);
+    res.status(200).json(data);
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const getFavourite = async (req, res, next) => {
+  try {
+    const userId = req.user?.id;
+    const recipeId = Number(req.params.id);
+    const data = await recipeService.getFavourite(userId, recipeId);
     res.status(200).json(data);
   } catch (error) {
     next(error);

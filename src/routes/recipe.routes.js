@@ -5,6 +5,7 @@ import * as recipeController from '../controllers/recipe.controller.js';
 const router = express.Router();
 
 router.get('/favourites', authenticate, recipeController.getFavourites);
+router.get('/favourite/:id', authenticate, recipeController.getFavourite);
 
 router.post(
   '/addToFavourites/:id',

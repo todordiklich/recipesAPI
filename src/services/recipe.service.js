@@ -7,17 +7,39 @@ export const getRecipe = async (params) => {
   return await recipeModel.findRecipe(id);
 };
 
-export const getRecipes = async (query) => {
-  let { page, limit, title = '', difficulty = '' } = query;
+export const getRecipes = async (query, userId) => {
+  let {
+    page,
+    limit,
+    title = '',
+    difficulty = '',
+    cookingTime = '',
+    ingredients = '',
+    favorites = '',
+    favourites = '',
+  } = query;
+
+  const shouldFilterFavorites =
+    favorites === true ||
+    favorites === 'true' ||
+    favorites === '1' ||
+    favourites === true ||
+    favourites === 'true' ||
+    favourites === '1';
 
   page = parseInt(page) || 1;
   limit = parseInt(limit) || 10;
   difficulty = difficulty.toUpperCase();
+  cookingTime = cookingTime ? parseInt(cookingTime) : undefined;
   const [recipes, total] = await recipeModel.findRecipes(
     page,
     limit,
     title,
     difficulty,
+    cookingTime,
+    ingredients,
+    shouldFilterFavorites,
+    userId,
   );
 
   return {
@@ -66,7 +88,7 @@ export const updateIngredient = async (ingredientId, data) => {
 };
 
 export const saveToFavorites = async (userId, recipeId) => {
-  const isAlreadySaved = await recipeModel.chеckFavorites(userId, recipeId);
+  const isAlreadySaved = await recipeModel.getFavourite(userId, recipeId);
 
   if (isAlreadySaved) {
     const remove = await recipeModel.removeFromFavourites(userId, recipeId);
@@ -89,6 +111,12 @@ export const getFavourites = async (userId) => {
   const favourites = await recipeModel.getFavourites(userId);
 
   return favourites;
+};
+
+export const getFavourite = async (userId, recipeId) => {
+  const favourite = await recipeModel.getFavourite(userId, recipeId);
+
+  return favourite;
 };
 
 export const addComment = async (recipeId, authorId, reqData) => {

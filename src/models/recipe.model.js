@@ -46,7 +46,16 @@ export const findRecipe = async (id) => {
   return recipe;
 };
 
-export const findRecipes = async (page, limit, title, difficulty) => {
+export const findRecipes = async (
+  page,
+  limit,
+  title,
+  difficulty,
+  cookingTime,
+  ingredients,
+  shouldFilterFavorites = false,
+  userId,
+) => {
   const where = {
     ...(title && {
       title: {
@@ -59,6 +68,30 @@ export const findRecipes = async (page, limit, title, difficulty) => {
         equals: difficulty,
       },
     }),
+    ...(cookingTime && {
+      cookingTime: {
+        equals: cookingTime,
+      },
+    }),
+    ...(ingredients && {
+      ingredients: {
+        some: {
+          name: {
+            contains: ingredients,
+            mode: 'insensitive',
+          },
+        },
+      },
+    }),
+    ...(shouldFilterFavorites && userId
+      ? {
+          favorites: {
+            some: {
+              userId,
+            },
+          },
+        }
+      : {}),
   };
 
   const [recipes, total] = await Promise.all([
@@ -185,12 +218,12 @@ export const saveToFavorites = async (userId, recipeId) => {
   return saved;
 };
 
-export const chеckFavorites = async (userId, recipeId) => {
+export const getFavourite = async (userId, recipeId) => {
   const result = await prisma.favoriteRecipe.findUnique({
     where: {
       userId_recipeId: {
-        userId: 25,
-        recipeId: 5,
+        userId,
+        recipeId,
       },
     },
   });
@@ -202,8 +235,8 @@ export const removeFromFavourites = async (userId, recipeId) => {
   const result = await prisma.favoriteRecipe.delete({
     where: {
       userId_recipeId: {
-        userId: 25,
-        recipeId: 5,
+        userId,
+        recipeId,
       },
     },
   });
