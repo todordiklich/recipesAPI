@@ -17,6 +17,7 @@ export const getMealPlan = async (id) => {
       },
       recipe: {
         select: {
+          id: true,
           title: true,
           description: true,
           cookingTime: true,
@@ -46,6 +47,7 @@ export const getMealPlans = async (userId) => {
       },
       recipe: {
         select: {
+          id: true,
           title: true,
           description: true,
           cookingTime: true,
